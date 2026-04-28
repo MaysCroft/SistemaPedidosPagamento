@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ApiPagamento/ApiPagamento.csproj" />
+  <Project Path="PedidoInterface/PedidoInterface.csproj" />
+  <Project Path="PedidoSimulator/PedidoSimulator.csproj" />
+  <Project Path="Shared/Shared.csproj" />
+</Solution>
