@@ -14,7 +14,8 @@ namespace Shared
         public string Doc_Cliente { get; set; }
         public string Itens { get; set; }
         public double Valor { get; set; }
-        public string Status { get; set; }
-        public string Pagamento { get; set; }
+        public string StatusPedido { get; set; }
+        public string FormaPagamento { get; set; }
+        public string StatusPagamento { get; set; }
     }
 }
