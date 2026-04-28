@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Windows.Input;
-using System.Collections.ObjectModel;
-using Shared;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Windows.Input;
+using System.Threading.Tasks;
+using PedidoInterface.Commands;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using Shared;
 
 namespace PedidoInterface.ViewModels
 {
