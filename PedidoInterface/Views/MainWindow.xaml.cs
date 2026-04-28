@@ -19,6 +19,7 @@ namespace PedidoInterface
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainViewModel();
         }
     }
 }

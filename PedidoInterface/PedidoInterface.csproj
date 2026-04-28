@@ -10,7 +10,10 @@
 
   <ItemGroup>
     <Folder Include="Commands\" />
-    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>
