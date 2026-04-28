@@ -37,7 +37,7 @@ app.UseSwaggerUI();
 app.UseSwaggerUI(options =>
 {
     options.RoutePrefix = "documentacao";
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "API SIMI v1");
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "API Sistemas de Pagamento v1");
 });
 
 app.UseHttpsRedirection();
