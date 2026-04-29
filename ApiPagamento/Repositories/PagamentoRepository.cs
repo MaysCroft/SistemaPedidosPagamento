@@ -27,7 +27,8 @@ namespace ApiPagamento.Repositories
             => await _context.Pagamentos.ToListAsync();
 
         /// <summary>
-        /// GetById - Responsável por retornar uma sala específica
+        /// GetById - Responsável por retornar uma pagamento 
+        /// específico do banco de dados, com base no ID fornecido
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -47,8 +48,8 @@ namespace ApiPagamento.Repositories
         }
 
         /// <summary>
-        /// Update é responsável por atualizar uma sala  
-        /// existente no banco de dados
+        /// Update é responsável por atualizar um 
+        /// pagamento existente no banco de dados
         /// </summary>
         /// <param name="pagamento"></param>
         /// <returns></returns>
@@ -66,8 +67,8 @@ namespace ApiPagamento.Repositories
         }
 
         /// <summary>
-        /// Delete é responsável por excluir uma sala do
-        /// banco de dados
+        /// Delete é responsável por excluir um 
+        /// pagamento do banco de dados
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

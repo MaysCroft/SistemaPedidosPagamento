@@ -2,7 +2,7 @@
 
 namespace ApiPagamento.Repositories.Interfaces
 {
-    public class IPagamentoRepository
+    public interface IPagamentoRepository
     {
         Task<List<PedidosData>> GetAll();
         Task<PedidosData> GetById(int id);
