@@ -6,7 +6,7 @@ namespace ApiPagamento.Services
     public class PagamentoService
     {
         /// <summary>
-        /// Repository de salas - Responsável por acessar os
+        /// Repository de pagamentos - Responsável por acessar os
         /// dados dos pagamentos no banco de dados
         /// </summary>
         private readonly IPagamentoRepository _repo;

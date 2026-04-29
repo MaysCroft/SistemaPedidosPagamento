@@ -1,5 +1,6 @@
 ﻿using ApiPagamento.Data;
 using ApiPagamento.Config;
+using ApiPagamento.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
@@ -12,45 +13,89 @@ namespace ApiPagamento.Controllers
     public class PagamentoController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly PagamentoService _service;
         private readonly IOptions<ApiConfig> _config;
 
-        public PagamentoController(AppDbContext context, IOptions<ApiConfig> config)
+        public PagamentoController(AppDbContext context, PagamentoService service, IOptions<ApiConfig> config)
         {
             _context = context;
+            _service = service;
             _config = config;
         }
 
         /// <summary>
         /// GET: api/v1/pagamentos: Retorna a lista de pagamentos registrados no banco de dados.
         /// </summary>
+        /// <remarks>
+        /// GET: api/v1/pagamentos: Retorna a lista de pagamentos registrados no banco de dados.
+        /// 
+        /// Observação: 
+        /// - O ID deve ser um número inteiro positivo. 
+        /// Se um ID inválido for fornecido (como um número negativo ou zero), 
+        /// a API retornará um erro 400 Bad Request com uma mensagem explicativa.
+        /// </remarks>
         /// <returns></returns>
+        /// <response code="200">Lista de pagamentos retornada com sucesso</response>
+        /// <response code="500">Erro interno de servidor</response>
         [HttpGet]
-        public async Task<IActionResult> ListarPagamentos()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Get()
         {
-            var dados = await _context.Pagamentos.ToListAsync();
-            return Ok(dados);
+            try
+            {
+                var dados = await _service.Listar();
+                return Ok(new { mensagem = "Pagamentos encontrados!", dados });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensagem = $"Erro ao listar pagamentos : {ex.Message}" });
+            }
         }
 
         /// <summary>
         /// GET api/v1/pagamentos/{id} - Retorna um pagamento específico pelo ID.
         /// </summary>
+        /// <remarks>
+        /// GET api/v1/pagamentos/{id} - Retorna um pagamento específico pelo ID.
+        /// 
+        /// Observação: 
+        /// - O ID deve ser um número inteiro positivo. 
+        /// Se um ID inválido for fornecido (como um número negativo ou zero), 
+        /// a API retornará um erro 400 Bad Request com uma mensagem explicativa.
+        /// </remarks>
         /// <param name="id"></param>
         /// <returns></returns>
         /// <response code="200">Pagamento encontrado com sucesso</response>
+        /// <response code="400">ID inválido fornecido</response>
         /// <response code="404">Pagamento não encontrado</response>
+        /// <response code="500">Erro interno de servidor</response>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> ListarPorId(int id)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetById(int id)
         {
-            var pagamento = await _context.Pagamentos.FindAsync(id);
+            if (id <= 0)
+                return BadRequest(new { mensagem = "O ID informado deve ser maior que zero" });
 
-            if (pagamento == null)
+            try
             {
-                return NotFound("Pagamento não encontrado.");
-            }
+                var pagamento = await _service.ObterPorId(id);
 
-            return Ok(pagamento);
+                if (pagamento == null)
+                {
+                    return NotFound(new { mensagem = $"Pagamento com ID {id} não encontrado!" });
+                }
+
+                return Ok(new { mensagem = "Pagamento encontrado!", pagamento });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensagem = $"Erro ao buscar pagamento : {ex.Message}" });
+            }
         }
 
         /// <summary>
@@ -71,23 +116,21 @@ namespace ApiPagamento.Controllers
             try
             {
                 if (pagamento == null ||
-                pagamento.Data_Pedido == null ||
-                string.IsNullOrWhiteSpace(pagamento.Nome_Cliente) ||
-                string.IsNullOrWhiteSpace(pagamento.Doc_Cliente) ||
-                string.IsNullOrWhiteSpace(pagamento.Produto) ||
-                pagamento.Quantidade <= 0 ||
-                pagamento.Valor <= 0 ||
-                string.IsNullOrWhiteSpace(pagamento.StatusPedido) ||
-                string.IsNullOrWhiteSpace(pagamento.FormaPagamento) ||
-                string.IsNullOrWhiteSpace(pagamento.StatusPagamento))
+                    pagamento.Data_Pedido == null ||
+                    string.IsNullOrWhiteSpace(pagamento.Nome_Cliente) ||
+                    string.IsNullOrWhiteSpace(pagamento.Doc_Cliente) ||
+                    string.IsNullOrWhiteSpace(pagamento.Produto) ||
+                    pagamento.Quantidade <= 0 ||
+                    pagamento.Valor <= 0 ||
+                    string.IsNullOrWhiteSpace(pagamento.StatusPedido) ||
+                    string.IsNullOrWhiteSpace(pagamento.FormaPagamento) ||
+                    string.IsNullOrWhiteSpace(pagamento.StatusPagamento))
                 {
-                    return BadRequest("Dados de pagamento inválidos.");
+                    return BadRequest(new { mensagem = "Todos os campos são obrigatórios!" });
                 }
 
-                _context.Pagamentos.Add(pagamento);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction(nameof(ListarPorId), new { id = pagamento.Id }, pagamento);
+                await _service.Criar(pagamento);
+                return CreatedAtAction(nameof(GetById), new { id = pagamento.Id }, pagamento);
             }
             catch (Exception ex)
             {
@@ -116,14 +159,14 @@ namespace ApiPagamento.Controllers
             {
                 if (id != pagamentoAtualizado.Id)
                 {
-                    return BadRequest("O ID da URL não corresponde ao ID do corpo");
+                    return BadRequest(new { mensagem = "O ID da URL não corresponde ao ID do corpo" });
                 }
 
                 var pagamentoExistente = await _context.Pagamentos.FindAsync(id);
 
                 if (pagamentoExistente == null)
                 {
-                    return NotFound("Pagamento não encontrado.");
+                    return NotFound(new { mensagem = "Pagamento não encontrado." });
                 }
 
                 _context.Entry(pagamentoExistente).CurrentValues.SetValues(pagamentoAtualizado);
@@ -135,8 +178,6 @@ namespace ApiPagamento.Controllers
             {
                 return StatusCode(500, $"Erro ao atualizar o pagamento: {ex.Message}");
             }
-
-            return NoContent();
         }
 
         /// <summary>
@@ -160,20 +201,17 @@ namespace ApiPagamento.Controllers
 
             try
             {
-                var pagamento = await _context.Pagamentos.FindAsync(id);
+                var pagamento = await _service.ObterPorId(id);
 
                 if (pagamento == null)
-                {
-                    return NotFound("Pagamento não encontrado.");
-                }
+                    return NotFound(new { mensagem = "Pagamento não encontrado." });
 
-                _context.Pagamentos.Remove(pagamento);
-                await _context.SaveChangesAsync();
+                await _service.Deletar(pagamento.Id);
                 return Ok(new { mensagem = "Pagamento removido com sucesso." });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao remover o pagamento: {ex.Message}");
+                return StatusCode(500, $"Erro ao remover o pagamento {id} : {ex.Message}");
             }
         }
     }
