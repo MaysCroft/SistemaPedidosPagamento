@@ -28,7 +28,7 @@ namespace PedidoInterface.ViewModels
             var http = new HttpClient();
 
             var dados = await http.GetFromJsonAsync<List<PedidosData>>(
-                "http://localhost:5000/api/pedidos");
+                "http://localhost:5091/api/pedidos");
 
             Pagamentos.Clear();
 

@@ -25,7 +25,7 @@ while (true)
     };
 
     var response = await http.PostAsJsonAsync(
-        "http://localhost:5000/api/v1/pedidos", pagamento);
+        "http://localhost:5091/api/v1/pedidos", pagamento);
 
     if (!response.IsSuccessStatusCode)
     {
