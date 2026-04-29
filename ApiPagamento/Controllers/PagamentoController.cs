@@ -31,23 +31,40 @@ namespace ApiPagamento.Controllers
             return Ok(dados);
         }
 
+        /// <summary>
+        /// POST api/v1/pagamentos: Recebe os dados de um pagamento, valida as informações e 
+        /// salva no banco de dados. Retorna o pagamento criado ou mensagens de erro em caso de falhas.
+        /// </summary>
+        /// <param name="pagamento"></param>
+        /// <returns></returns>
+        /// <response code="201">Pagamento criado com sucesso!</response>
+        /// <response code="400">Dados de pagamento inválidos!</response>
+        /// <response code="500">Erro ao salvar pagamento!</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post([FromBody] PedidosData pagamento)
         {
-            if (pagamento == null ||
+            try
+            {
+                if (pagamento == null ||
                 pagamento.Data_Pedido == null ||
                 string.IsNullOrWhiteSpace(pagamento.Nome_Cliente) ||
                 string.IsNullOrWhiteSpace(pagamento.Doc_Cliente) ||
                 string.IsNullOrWhiteSpace(pagamento.Produto) ||
-                string.
-            {
-                return BadRequest("Dados de pagamento inválidos.");
-            }
+                pagamento.Quantidade <= 0 ||
+                pagamento.Valor <= 0 ||
+                string.IsNullOrWhiteSpace(pagamento.StatusPedido) ||
+                string.IsNullOrWhiteSpace(pagamento.FormaPagamento) ||
+                string.IsNullOrWhiteSpace(pagamento.StatusPagamento))
+                {
+                    return BadRequest("Dados de pagamento inválidos.");
+                }
 
-            try
-            {
                 _context.Pagamentos.Add(pagamento);
                 await _context.SaveChangesAsync();
+
                 return CreatedAtAction(nameof(Get), new { id = pagamento.Id }, pagamento);
             }
             catch (Exception ex)
