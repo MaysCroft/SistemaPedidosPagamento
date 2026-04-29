@@ -13,7 +13,7 @@ namespace Shared
         public string Nome_Cliente { get; set; }
         public string Doc_Cliente { get; set; }
         public string Produto { get; set; }
-        public string Quantidade { get; set; }
+        public int Quantidade { get; set; }
         public double Valor { get; set; }
         public string StatusPedido { get; set; }
         public string FormaPagamento { get; set; }
