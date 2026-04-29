@@ -12,7 +12,8 @@ namespace Shared
         public DateTime Data_Pedido { get; set; }
         public string Nome_Cliente { get; set; }
         public string Doc_Cliente { get; set; }
-        public string Itens { get; set; }
+        public string Produto { get; set; }
+       
         public double Valor { get; set; }
         public string StatusPedido { get; set; }
         public string FormaPagamento { get; set; }

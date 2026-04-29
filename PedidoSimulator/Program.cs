@@ -16,7 +16,7 @@ while (true)
         Data_Pedido = DateTime.Now,
         Nome_Cliente = $"Cliente {index}",
         Doc_Cliente = $"123456789{index}",
-        Itens = $"Item {index}, Item {index + 1}",
+        Produto = $"Item {index}, Item {index + 1}",
         Valor = 100.0 + index,
         StatusPedido = $"{statuspedido[new Random().Next(statuspedido.Count)]}",
         FormaPagamento = $"{formapagamento[new Random().Next(formapagamento.Count)]}",
