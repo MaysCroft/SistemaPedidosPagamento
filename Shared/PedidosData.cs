@@ -10,13 +10,13 @@ namespace Shared
     {
         public int Id { get; set; }
         public DateTime Data_Pedido { get; set; }
-        public string Nome_Cliente { get; set; }
-        public string Doc_Cliente { get; set; }
-        public string Produto { get; set; }
-        public int Quantidade { get; set; }
-        public double Valor { get; set; }
-        public string StatusPedido { get; set; }
-        public string FormaPagamento { get; set; }
-        public string StatusPagamento { get; set; }
+        public required string Nome_Cliente { get; set; }
+        public required string Doc_Cliente { get; set; }
+        public required string Produto { get; set; }
+        public required int Quantidade { get; set; }
+        public required double Valor { get; set; }
+        public required string StatusPedido { get; set; }
+        public required string FormaPagamento { get; set; }
+        public required string StatusPagamento { get; set; }
     }
 }
