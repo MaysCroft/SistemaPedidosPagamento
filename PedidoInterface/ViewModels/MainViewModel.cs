@@ -19,7 +19,6 @@ namespace PedidoInterface.ViewModels
         public MainViewModel()
         {
             Pagamentos = new ObservableCollection<PedidosData>();
-
             CarregarPagamentosCommand = new RelayCommand(CarregarPagamentos);
         }
 
@@ -28,7 +27,7 @@ namespace PedidoInterface.ViewModels
             var http = new HttpClient();
 
             var dados = await http.GetFromJsonAsync<List<PedidosData>>(
-                "https://localhost:7107/api/pedidos");
+                "https://localhost:7107/api/v1/pagamentos");
 
             Pagamentos.Clear();
 

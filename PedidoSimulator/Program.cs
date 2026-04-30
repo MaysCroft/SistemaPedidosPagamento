@@ -7,7 +7,7 @@ int index = 0;
 while (true)
 {
     var statuspedido = new List<string> { "Pendente", "Processando", "Enviado", "Entregue", "Cancelado" };
-    var formapagamento = new List<string> { "Dinheiro", "Cartão de Crédito", "Cartão de Débito", "Boleto", "Pix", "Transferência Bancária" };
+    var formapagamento = new List<string> { "Dinheiro", "Cartão de Crédito", "Cartão de Débito", "Boleto", "PIX", "Transferência Bancária" };
     var statuspagamento = new List<string> { "Aguardando", "Pago", "Recusado", "Estornado" };
 
     var pagamento = new PedidosData
@@ -25,7 +25,7 @@ while (true)
     };
 
     var response = await http.PostAsJsonAsync(
-        "https://localhost:7107/api/v1/pedidos", pagamento);
+        "https://localhost:7107/api/v1/pagamentos", pagamento);
 
     if (!response.IsSuccessStatusCode)
     {

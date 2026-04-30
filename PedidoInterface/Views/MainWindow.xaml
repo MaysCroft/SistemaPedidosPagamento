@@ -4,12 +4,110 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PedidoInterface"
+        xmlns:viewmodels="clr-namespace:PedidoInterface.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
-        Title="Sistema de Pagamento" 
-        Height="450" 
-        Width="800">
-    
-    <Grid>
+        Title="Sistema de Pagamentos" 
+        Height="600" 
+        Width="800"
+        WindowStartupLocation="CenterScreen">
 
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Grid.Row="0" 
+                  Margin="0,0,0,10" 
+                  Padding="10">
+
+            <WrapPanel ItemWidth="230" 
+                       ItemHeight="50">
+
+                <StackPanel Margin="5">
+                    <TextBlock Text="Data do Pedido:"/>
+                    <DatePicker SelectedDate="{Binding Pagamentos.Data_Pedido}"/>
+                </StackPanel>
+
+                <StackPanel Margin="5">
+                    <TextBlock Text="Nome do Cliente:"/>
+                    <TextBox Text="{Binding Pagamentos.Nome_Cliente}"/>
+                </StackPanel>
+
+                <StackPanel Margin="5">
+                    <TextBlock Text="Documento (CPF/CNPJ):"/>
+                    <TextBox Text="{Binding Pagamentos.Doc_Cliente}"/>
+                </StackPanel>
+
+                <StackPanel Margin="5">
+                    <TextBlock Text="Produto:"/>
+                    <TextBox Text="{Binding Pagamentos.Produto}"/>
+                </StackPanel>
+
+                <StackPanel Margin="5">
+                    <TextBlock Text="Quantidade:"/>
+                    <TextBox Text="{Binding Pagamentos.Quantidade}"/>
+                </StackPanel>
+
+                <StackPanel Margin="5">
+                    <TextBlock Text="Valor:"/>
+                    <TextBox Text="{Binding Pagamentos.Valor}"/>
+                </StackPanel>
+
+                <StackPanel Margin="5">
+                    <TextBlock Text="Status do Pedido:"/>
+                    <ComboBox Text="{Binding Pagamentos.StatusPedido}">
+                        <ComboBoxItem Content="Pendente"/>
+                        <ComboBoxItem Content="Processando"/>
+                        <ComboBoxItem Content="Enviado"/>
+                        <ComboBoxItem Content="Entregue"/>
+                        <ComboBoxItem Content="Cancelado"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Margin="5">
+                    <TextBlock Text="Forma de Pagamento:"/>
+                    <ComboBox Text="{Binding Pagamentos.FormaPagamento}">
+                        <ComboBoxItem Content="Dinheiro"/>
+                        <ComboBoxItem Content="Cartão de Crédito"/>
+                        <ComboBoxItem Content="Cartão de Débito"/>
+                        <ComboBoxItem Content="Boleto"/>
+                        <ComboBoxItem Content="PIX"/>
+                        <ComboBoxItem Content="Transferência Bancária"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Margin="5">
+                    <TextBlock Text="Status do Pagamento:"/>
+                    <ComboBox Text="{Binding Pagamentos.StatusPagamento}">
+                        <ComboBoxItem Content="Aguardando"/>
+                        <ComboBoxItem Content="Pago"/>
+                        <ComboBoxItem Content="Recusado"/>
+                        <ComboBoxItem Content="Estornado"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Margin="5"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+
+                    <Button Content="Adicionar Pedido" 
+                            Command="{Binding CarregarPagamentosCommand}" 
+                            Height="25" 
+                            Width="150"
+                            />
+                </StackPanel>
+            </WrapPanel>
+        </GroupBox>
+
+        <ScrollViewer Grid.Row="1">
+            <DataGrid ItemsSource="{Binding Pagamentos}" 
+                      AutoGenerateColumns="True" 
+                      IsReadOnly="True" 
+                      HeadersVisibility="Column" 
+                      AlternatingRowBackground="#FFF0F0F0">
+            </DataGrid>
+        </ScrollViewer>
     </Grid>
 </Window>

@@ -115,6 +115,16 @@ namespace ApiPagamento.Controllers
         {
             try
             {
+                if (pagamento.Quantidade > _config.Value.MaxQuantidade)
+                {
+                    return BadRequest("Quantidade acima do limite permitido!");
+                }
+
+                if (pagamento.Valor > _config.Value.MaxValor)
+                {
+                    return BadRequest("Valor acima do limite permitido!");
+                }
+
                 if (pagamento == null ||
                     pagamento.Data_Pedido == null ||
                     string.IsNullOrWhiteSpace(pagamento.Nome_Cliente) ||
