@@ -36,15 +36,23 @@ namespace ApiPagamento.Controllers
         /// </remarks>
         /// <returns></returns>
         /// <response code="200">Lista de pagamentos retornada com sucesso</response>
+        /// <response code="404">Nenhum pagamento encontrado</response>
         /// <response code="500">Erro interno de servidor</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
             try
             {
                 var dados = await _service.Listar();
+
+                if (dados == null)
+                {
+                    return NotFound("Nenhum dado encontrado!");
+                }
+
                 return Ok(new { mensagem = "Pagamentos encontrados!", dados });
             }
             catch (Exception ex)
